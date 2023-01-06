@@ -1,7 +1,8 @@
-import 'package:chatbot/constant.dart';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
+
 import 'model.dart';
 
 void main() {
@@ -9,7 +10,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +21,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
-const backgroundcolor = Color.fromARGB(255, 22, 26, 75);
-const botbackgroundcolor = Color.fromARGB(255, 1, 4, 39);
+const backgroundColor = Color(0xff343541);
+const botBackgroundColor = Color(0xff444654);
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
@@ -30,66 +31,71 @@ class ChatPage extends StatefulWidget {
   State<ChatPage> createState() => _ChatPageState();
 }
 
+//future
+Future<String> generateResponse(String prompt) async {
+  final apiKey = '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';
+
+  var url = Uri.https("api.openai.com", "/v1/completions");
+  final response = await http.post(
+    url,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $apiKey'
+    },
+    body: jsonEncode({
+      "model": "text-davinci-003",
+      "prompt": prompt,
+      'temperature': 0,
+      'max_tokens': 2000,
+      'top_p': 1,
+      'frequency_penalty': 0.0,
+      'presence_penalty': 0.0,
+    }),
+  );
+
+  // Do something with the response
+  Map<String, dynamic> newresponse = jsonDecode(response.body);
+  return newresponse['choices'][0]['text'];
+}
+
 class _ChatPageState extends State<ChatPage> {
-  late bool isLoading;
-  TextEditingController _textController = TextEditingController();
-  final _scrollContraller = ScrollController();
+  final _textController = TextEditingController();
+  final _scrollController = ScrollController();
   final List<ChatMessage> _messages = [];
+  late bool isLoading;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     isLoading = false;
   }
 
-  Future<String> generateResponse(String prompt) async {
-    final apiKey = apiSecretKey;
-    var url = Uri.https("api.open.com", "/v1/completions");
-    final response = await http.post(url,
-        headers: {
-          'Content-Type': 'application.json',
-          'Authorization': 'Bearer $apiKey'
-        },
-        body: jsonEncode({
-          'model': 'text-davinci-003',
-          'prompt': prompt,
-          'temperature': 0,
-          'max_token': 2000,
-          'top_p': 1,
-          'frequency_penalty': 0.0,
-          'presence_penalty': 0.0,
-        }));
-
-    Map<String, dynamic> newresponse = jsonDecode(response.body);
-    return newresponse['choices'][0]['text'];
-  }
-
+  @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          toolbarHeight: 100,
-          title: const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text(
-              "ChatGPT",
-              maxLines: 2,
-              textAlign: TextAlign.center,
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 100,
+        title: const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Text(
+            "OpenAI's ChatGPT Flutter Example \n@ngjunya",
+            maxLines: 2,
+            textAlign: TextAlign.center,
           ),
-          backgroundColor: botbackgroundcolor,
         ),
-        backgroundColor: backgroundcolor,
-        body: Column(
+        backgroundColor: botBackgroundColor,
+      ),
+      backgroundColor: backgroundColor,
+      body: SafeArea(
+        child: Column(
           children: [
             Expanded(
               child: _buildList(),
             ),
             Visibility(
               visible: isLoading,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: CircularProgressIndicator(
                   color: Colors.white,
                 ),
@@ -99,14 +105,61 @@ class _ChatPageState extends State<ChatPage> {
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: [
-                  //input field
+                  //textfield
                   _buildInput(),
-                  //submit button
+                  //button
                   _buildSubmit(),
                 ],
               ),
-            )
+            ),
           ],
+        ),
+      ),
+    );
+  }
+
+//submitbutton
+  Widget _buildSubmit() {
+    return Visibility(
+      visible: !isLoading,
+      child: Container(
+        color: botBackgroundColor,
+        child: IconButton(
+          icon: const Icon(
+            Icons.send_rounded,
+            color: Color.fromRGBO(142, 142, 160, 1),
+          ),
+          onPressed: () async {
+            setState(
+              () {
+                _messages.add(
+                  ChatMessage(
+                    text: _textController.text,
+                    chatMessageType: ChatMessageType.user,
+                  ),
+                );
+                isLoading = true;
+              },
+            );
+            var input = _textController.text;
+            _textController.clear();
+            Future.delayed(const Duration(milliseconds: 50))
+                .then((_) => _scrollDown());
+            generateResponse(input).then((value) {
+              setState(() {
+                isLoading = false;
+                _messages.add(
+                  ChatMessage(
+                    text: value,
+                    chatMessageType: ChatMessageType.bot,
+                  ),
+                );
+              });
+            });
+            _textController.clear();
+            Future.delayed(const Duration(milliseconds: 50))
+                .then((_) => _scrollDown());
+          },
         ),
       ),
     );
@@ -116,10 +169,10 @@ class _ChatPageState extends State<ChatPage> {
     return Expanded(
       child: TextField(
         textCapitalization: TextCapitalization.sentences,
-        style: TextStyle(color: Colors.white),
+        style: const TextStyle(color: Colors.white),
         controller: _textController,
-        decoration: InputDecoration(
-          fillColor: botbackgroundcolor,
+        decoration: const InputDecoration(
+          fillColor: botBackgroundColor,
           filled: true,
           border: InputBorder.none,
           focusedBorder: InputBorder.none,
@@ -131,61 +184,25 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  Widget _buildSubmit() {
-    return Visibility(
-        visible: !isLoading,
-        child: Container(
-          child: IconButton(
-            icon: Icon(
-              Icons.send,
-              color: Color.fromARGB(255, 0, 0, 0),
-            ),
-            onPressed: () {
-              setState(() {
-                _messages.add(ChatMessage(
-                    text: _textController.text,
-                    chatMessageType: ChatMessageType.user));
-                isLoading = true;
-              });
-              var input = _textController.text;
-              _textController.clear();
-              Future.delayed(Duration(milliseconds: 50))
-                  .then((value) => _scrollDown());
-
-              generateResponse(input).then((value) {
-                setState(() {
-                  isLoading = false;
-                  _messages.add(ChatMessage(
-                      text: value, chatMessageType: ChatMessageType.bot));
-                });
-              });
-              _textController.clear();
-              Future.delayed(Duration(milliseconds: 50))
-                  .then((value) => _scrollDown());
-            },
-          ),
-        ));
-  }
-
-  void _scrollDown() {
-    _scrollContraller.animateTo(
-      _scrollContraller.position.maxScrollExtent,
-      duration: Duration(milliseconds: 300),
-      curve: Curves.easeOut,
-    );
-  }
-
   ListView _buildList() {
     return ListView.builder(
+      controller: _scrollController,
       itemCount: _messages.length,
-      controller: _scrollContraller,
-      itemBuilder: ((context, index) {
+      itemBuilder: (context, index) {
         var message = _messages[index];
         return ChatMessageWidget(
           text: message.text,
           chatMessageType: message.chatMessageType,
         );
-      }),
+      },
+    );
+  }
+
+  void _scrollDown() {
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
     );
   }
 }
@@ -193,24 +210,26 @@ class _ChatPageState extends State<ChatPage> {
 class ChatMessageWidget extends StatelessWidget {
   final String text;
   final ChatMessageType chatMessageType;
+
   const ChatMessageWidget(
       {super.key, required this.text, required this.chatMessageType});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      padding: EdgeInsets.all(16),
-      color: ChatMessageType == ChatMessageType.bot
-          ? botbackgroundcolor
-          : backgroundcolor,
+      margin: const EdgeInsets.symmetric(vertical: 10.0),
+      padding: const EdgeInsets.all(16),
+      color: chatMessageType == ChatMessageType.bot
+          ? botBackgroundColor
+          : backgroundColor,
       child: Row(
-        children: [
-          ChatMessageType == ChatMessageType.bot
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          chatMessageType == ChatMessageType.bot
               ? Container(
-                  margin: EdgeInsets.only(right: 16),
+                  margin: const EdgeInsets.only(right: 16.0),
                   child: CircleAvatar(
-                    backgroundColor: Color.fromARGB(255, 73, 83, 226),
+                    backgroundColor: const Color.fromRGBO(16, 163, 127, 1),
                     child: Image.asset(
                       'assets/bot2.png',
                       color: Colors.white,
@@ -219,31 +238,33 @@ class ChatMessageWidget extends StatelessWidget {
                   ),
                 )
               : Container(
-                  margin: EdgeInsets.only(right: 16),
-                  child:
-                      CircleAvatar(child: Icon(Icons.person_outline_rounded)),
-                ),
-          Expanded(
-              child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(8),
+                  margin: const EdgeInsets.only(right: 16.0),
+                  child: const CircleAvatar(
+                    child: Icon(
+                      Icons.person,
+                    ),
                   ),
                 ),
-                child: Text(
-                  text,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge
-                      ?.copyWith(color: Colors.white),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                  ),
+                  child: Text(
+                    text,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge
+                        ?.copyWith(color: Colors.white),
+                  ),
                 ),
-              )
-            ],
-          ))
+              ],
+            ),
+          ),
         ],
       ),
     );
