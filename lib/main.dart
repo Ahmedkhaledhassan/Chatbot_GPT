@@ -75,7 +75,7 @@ class _ChatPageState extends State<ChatPage> {
                   //input field
                   _buildInput(),
                   //submit button
-                  //_buildSubmit(),
+                  _buildSubmit(),
                 ],
               ),
             )
@@ -103,4 +103,6 @@ class _ChatPageState extends State<ChatPage> {
       ),
     );
   }
+
+  Widget _buildSubmit() {}
 }
