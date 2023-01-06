@@ -132,3 +132,15 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 }
+
+class ChatMessageWidget extends StatelessWidget {
+  final String text;
+  final ChatMessageType chatMessageType;
+  const ChatMessageWidget(
+      {super.key, required this.text, required this.chatMessageType});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
