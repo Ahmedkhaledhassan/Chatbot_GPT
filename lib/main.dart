@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'model.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,7 +33,7 @@ class _ChatPageState extends State<ChatPage> {
   late bool isLoading;
   TextEditingController _textController = TextEditingController();
   final _scrollContraller = ScrollController();
-  final List<ChatMessage> messages = [];
+  final List<ChatMessage> _messages = [];
 
   @override
   void initState() {
@@ -122,7 +124,7 @@ class _ChatPageState extends State<ChatPage> {
 
   ListView _buildList() {
     return ListView.builder(
-      itemCount: _messages.lenght,
+      itemCount: _messages.length,
       controller: _scrollContraller,
       itemBuilder: ((context, index) {
         return ChatMessageWidget();
