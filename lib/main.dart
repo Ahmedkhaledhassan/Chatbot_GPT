@@ -104,5 +104,14 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  Widget _buildSubmit() {}
+  Widget _buildSubmit() {
+    return Visibility(
+        visible: !isLoading,
+        child: Container(
+          child: IconButton(
+            icon: Icon(Icons.send),
+            onPressed: () {},
+          ),
+        ));
+  }
 }
