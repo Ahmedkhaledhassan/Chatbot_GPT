@@ -17,8 +17,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
-const backgroundcolor = Color.fromARGB(0, 10, 10, 150);
-const botbackgroundcolor = Color.fromARGB(0, 5, 5, 83);
+const backgroundcolor = Color.fromARGB(255, 22, 26, 75);
+const botbackgroundcolor = Color.fromARGB(255, 1, 4, 39);
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
@@ -30,6 +30,29 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 100,
+          title: const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              "ChatGPT",
+              maxLines: 2,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          backgroundColor: botbackgroundcolor,
+        ),
+        backgroundColor: backgroundcolor,
+        body: Column(
+          children: [
+            // Expanded(
+            //   child: _buildList(),
+            // )
+          ],
+        ),
+      ),
+    );
   }
 }
