@@ -127,7 +127,11 @@ class _ChatPageState extends State<ChatPage> {
       itemCount: _messages.length,
       controller: _scrollContraller,
       itemBuilder: ((context, index) {
-        return ChatMessageWidget();
+        var message = _messages[index];
+        return ChatMessageWidget(
+          text: message.text,
+          chatMessageType: message.chatMessageType,
+        );
       }),
     );
   }
@@ -161,7 +165,32 @@ class ChatMessageWidget extends StatelessWidget {
                     ),
                   ),
                 )
-              : Container()
+              : Container(
+                  margin: EdgeInsets.only(right: 16),
+                  child:
+                      CircleAvatar(child: Icon(Icons.person_outline_rounded)),
+                ),
+          Expanded(
+              child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(8),
+                  ),
+                ),
+                child: Text(
+                  text,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyLarge
+                      ?.copyWith(color: Colors.white),
+                ),
+              )
+            ],
+          ))
         ],
       ),
     );
