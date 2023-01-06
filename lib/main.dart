@@ -109,7 +109,10 @@ class _ChatPageState extends State<ChatPage> {
         visible: !isLoading,
         child: Container(
           child: IconButton(
-            icon: Icon(Icons.send),
+            icon: Icon(
+              Icons.send,
+              color: Color.fromARGB(255, 0, 0, 0),
+            ),
             onPressed: () {},
           ),
         ));
