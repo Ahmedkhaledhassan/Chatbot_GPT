@@ -151,6 +151,17 @@ class _ChatPageState extends State<ChatPage> {
               _textController.clear();
               Future.delayed(Duration(milliseconds: 50))
                   .then((value) => _scrollDown());
+
+              generateResponse(input).then((value) {
+                setState(() {
+                  isLoading = false;
+                  _messages.add(ChatMessage(
+                      text: value, chatMessageType: ChatMessageType.bot));
+                });
+              });
+              _textController.clear();
+              Future.delayed(Duration(milliseconds: 50))
+                  .then((value) => _scrollDown());
             },
           ),
         ));
