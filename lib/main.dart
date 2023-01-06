@@ -141,6 +141,29 @@ class ChatMessageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      padding: EdgeInsets.all(16),
+      color: ChatMessageType == ChatMessageType.bot
+          ? botbackgroundcolor
+          : backgroundcolor,
+      child: Row(
+        children: [
+          ChatMessageType == ChatMessageType.bot
+              ? Container(
+                  margin: EdgeInsets.only(right: 16),
+                  child: CircleAvatar(
+                    backgroundColor: Color.fromARGB(255, 73, 83, 226),
+                    child: Image.asset(
+                      'assets/bot2.png',
+                      color: Colors.white,
+                      scale: 1.5,
+                    ),
+                  ),
+                )
+              : Container()
+        ],
+      ),
+    );
   }
 }
