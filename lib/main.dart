@@ -60,6 +60,9 @@ class _ChatPageState extends State<ChatPage> {
           'frequency_penalty': 0.0,
           'presence_penalty': 0.0,
         }));
+
+    Map<String, dynamic> newresponse = jsonDecode(response.body);
+    return newresponse['choices'][0]['text'];
   }
 
   Widget build(BuildContext context) {
