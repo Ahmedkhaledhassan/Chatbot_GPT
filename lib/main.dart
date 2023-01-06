@@ -31,6 +31,12 @@ class _ChatPageState extends State<ChatPage> {
   late bool isLoading;
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    isLoading = false;
+  }
+
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
@@ -60,6 +66,13 @@ class _ChatPageState extends State<ChatPage> {
                   color: Colors.white,
                 ),
               ),
+            ),
+            Row(
+              children: [
+                //input field
+                _buildInput(),
+                _buildSubmit(),
+              ],
             )
           ],
         ),
