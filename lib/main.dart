@@ -85,14 +85,14 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  Expanded _builtInput() {
+  Expanded _buildInput() {
     return Expanded(
       child: TextField(
         textCapitalization: TextCapitalization.sentences,
         style: TextStyle(color: Colors.white),
         controller: _textController,
         decoration: InputDecoration(
-          fillColor: backgroundcolor,
+          fillColor: botbackgroundcolor,
           filled: true,
           border: InputBorder.none,
           focusedBorder: InputBorder.none,
