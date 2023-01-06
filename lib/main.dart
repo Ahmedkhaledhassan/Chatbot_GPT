@@ -28,6 +28,8 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
+  late bool isLoading;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -50,6 +52,15 @@ class _ChatPageState extends State<ChatPage> {
             // Expanded(
             //   child: _buildList(),
             // )
+            Visibility(
+              visible: isLoading,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                ),
+              ),
+            )
           ],
         ),
       ),
