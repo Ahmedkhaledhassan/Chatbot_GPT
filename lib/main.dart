@@ -140,9 +140,28 @@ class _ChatPageState extends State<ChatPage> {
               Icons.send,
               color: Color.fromARGB(255, 0, 0, 0),
             ),
-            onPressed: () {},
+            onPressed: () {
+              setState(() {
+                _messages.add(ChatMessage(
+                    text: _textController.text,
+                    chatMessageType: ChatMessageType.user));
+                isLoading = true;
+              });
+              var input = _textController.text;
+              _textController.clear();
+              Future.delayed(Duration(milliseconds: 50))
+                  .then((value) => _scrollDown());
+            },
           ),
         ));
+  }
+
+  void _scrollDown() {
+    _scrollContraller.animateTo(
+      _scrollContraller.position.maxScrollExtent,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
   }
 
   ListView _buildList() {
