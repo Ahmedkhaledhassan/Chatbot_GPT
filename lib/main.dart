@@ -30,6 +30,8 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   late bool isLoading;
   TextEditingController _textController = TextEditingController();
+  final _scrollContraller = ScrollController();
+  final List<ChatMessage> messages = [];
 
   @override
   void initState() {
@@ -56,9 +58,9 @@ class _ChatPageState extends State<ChatPage> {
         backgroundColor: backgroundcolor,
         body: Column(
           children: [
-            // Expanded(
-            //   child: _buildList(),
-            // )
+            Expanded(
+              child: _buildList(),
+            ),
             Visibility(
               visible: isLoading,
               child: Padding(
@@ -116,5 +118,15 @@ class _ChatPageState extends State<ChatPage> {
             onPressed: () {},
           ),
         ));
+  }
+
+  ListView _buildList() {
+    return ListView.builder(
+      itemCount: _messages.lenght,
+      controller: _scrollContraller,
+      itemBuilder: ((context, index) {
+        return ChatMessageWidget();
+      }),
+    );
   }
 }
