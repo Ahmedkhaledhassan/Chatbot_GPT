@@ -17,6 +17,9 @@ class MyApp extends StatelessWidget {
   }
 }
 
+const backgroundcolor = Color.fromARGB(0, 10, 10, 150);
+const botbackgroundcolor = Color.fromARGB(0, 5, 5, 83);
+
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
 
