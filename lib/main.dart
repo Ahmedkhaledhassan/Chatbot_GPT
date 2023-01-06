@@ -29,6 +29,7 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   late bool isLoading;
+  TextEditingController _textController = TextEditingController();
 
   @override
   void initState() {
@@ -67,14 +68,37 @@ class _ChatPageState extends State<ChatPage> {
                 ),
               ),
             ),
-            Row(
-              children: [
-                //input field
-                _buildInput(),
-                _buildSubmit(),
-              ],
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  //input field
+                  _buildInput(),
+                  //submit button
+                  //_buildSubmit(),
+                ],
+              ),
             )
           ],
+        ),
+      ),
+    );
+  }
+
+  Expanded _builtInput() {
+    return Expanded(
+      child: TextField(
+        textCapitalization: TextCapitalization.sentences,
+        style: TextStyle(color: Colors.white),
+        controller: _textController,
+        decoration: InputDecoration(
+          fillColor: backgroundcolor,
+          filled: true,
+          border: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          enabledBorder: InputBorder.none,
+          errorBorder: InputBorder.none,
+          disabledBorder: InputBorder.none,
         ),
       ),
     );
