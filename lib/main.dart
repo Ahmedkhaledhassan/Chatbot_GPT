@@ -21,8 +21,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
-const backgroundColor = Color(0xff343541);
-const botBackgroundColor = Color(0xff444654);
+const backgroundColor = Color.fromARGB(255, 8, 15, 82);
+const botBackgroundColor = Color.fromARGB(255, 2, 11, 53);
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
@@ -33,7 +33,7 @@ class ChatPage extends StatefulWidget {
 
 //future
 Future<String> generateResponse(String prompt) async {
-  final apiKey = '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';
+  final apiKey = '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';
 
   var url = Uri.https("api.openai.com", "/v1/completions");
   final response = await http.post(
@@ -78,7 +78,7 @@ class _ChatPageState extends State<ChatPage> {
         title: const Padding(
           padding: EdgeInsets.all(8.0),
           child: Text(
-            "OpenAI's ChatGPT Flutter Example \n@ngjunya",
+            "ChatGPT",
             maxLines: 2,
             textAlign: TextAlign.center,
           ),
@@ -123,11 +123,11 @@ class _ChatPageState extends State<ChatPage> {
     return Visibility(
       visible: !isLoading,
       child: Container(
-        color: botBackgroundColor,
+        //icon
         child: IconButton(
           icon: const Icon(
             Icons.send_rounded,
-            color: Color.fromRGBO(142, 142, 160, 1),
+            color: Color.fromARGB(255, 0, 0, 3),
           ),
           onPressed: () async {
             setState(
@@ -229,7 +229,7 @@ class ChatMessageWidget extends StatelessWidget {
               ? Container(
                   margin: const EdgeInsets.only(right: 16.0),
                   child: CircleAvatar(
-                    backgroundColor: const Color.fromRGBO(16, 163, 127, 1),
+                    backgroundColor: Color.fromARGB(255, 165, 192, 66),
                     child: Image.asset(
                       'assets/bot2.png',
                       color: Colors.white,
